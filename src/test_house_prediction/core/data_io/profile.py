@@ -419,7 +419,3 @@ def main(argv: list[str] | None = None) -> None:
             profile_dataset(args.path, args.target, args.problem_type), ensure_ascii=False, indent=1, default=str
         )
     )
-
-
-if __name__ == "__main__":
-    main()

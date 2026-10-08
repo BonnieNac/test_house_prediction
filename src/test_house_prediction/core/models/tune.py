@@ -193,7 +193,3 @@ def main(argv: list[str] | None = None) -> None:
         model_alias=args.alias,
     )
     logger.info(f"best tuned model: {result.model_name}, test metrics: {result.test_metrics}")
-
-
-if __name__ == "__main__":
-    main()
