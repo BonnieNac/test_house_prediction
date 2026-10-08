@@ -46,7 +46,7 @@ docker-inspect: ## Inspect OCI labels of the built image
 ###################################################################
 
 mlflow-ui: ## Open the MLflow UI on the local store (http://localhost:5000)
-	uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+	MLFLOW_SERVER_ENABLE_JOB_EXECUTION=false uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000 --workers 1
 
 mlflow-up: ## Start the MLflow tracking server with docker compose
 	$(COMPOSE) up -d mlflow
