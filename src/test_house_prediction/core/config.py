@@ -11,11 +11,14 @@ PROBLEM_TYPE: ProblemType = "regression"
 
 # Data files (data/raw/ and data/processed/): .csv, .xlsx, .xls, .json or .parquet.
 # A pattern such as "api_*.parquet" reads the latest dated snapshot written by make fetch.
-RAW_DATA_FILE: str = "dataset.csv"
+# profil : fichier fourni, copié dans data/raw/
+RAW_DATA_FILE: str = "house_data.csv"
 PROCESSED_DATA_FILE: str = "dataset_processed.csv"
 
 # Columns
-TARGET: str = "target"
+# description : "prédire le prix de vente d'une maison" ; profil : colonne continue `price`
+# (le flag `identifier` du profil est un faux positif : 83 valeurs distinctes sur 84 lignes pour un prix)
+TARGET: str = "price"
 ID_COLUMNS: list[str] = []  # identifiers, never used as features
 # None: inferred from the dtypes (numbers → numeric, everything else → categorical)
 NUMERIC_FEATURES: list[str] | None = None
@@ -23,7 +26,8 @@ CATEGORICAL_FEATURES: list[str] | None = None
 
 # Metric used to rank the models (make train, make tune)
 # rmse | mae (less sensitive to outliers) | r2
-PRIMARY_METRIC: str = "rmse"
+# règle setup-ds : 8,3 % de valeurs extrêmes dans price, la MAE y est moins sensible
+PRIMARY_METRIC: str = "mae"
 
 # Training
 TEST_SIZE: float = 0.2  # share of the rows kept for the final evaluation
