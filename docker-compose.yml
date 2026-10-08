@@ -1,0 +1,75 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+      target: api
+      args:
+        BUILD_VERSION: ${BUILD_VERSION:-dev}
+        BUILD_REVISION: ${BUILD_REVISION:-unknown}
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+    container_name: test_house_prediction-api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./pyproject.toml
+          target: /app/pyproject.toml
+        - action: rebuild
+          path: ./dockerfiles/Dockerfile
+    networks:
+      - test_house_prediction-network
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+      target: streamlit
+      args:
+        BUILD_VERSION: ${BUILD_VERSION:-dev}
+        BUILD_REVISION: ${BUILD_REVISION:-unknown}
+        BUILD_DATE: ${BUILD_DATE:-unknown}
+    container_name: test_house_prediction-ui
+    env_file:
+      - .env
+    ports:
+      - "8501:8501"
+    restart: on-failure
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 5
+    depends_on:
+      api:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./app
+          target: /app/app
+        - action: sync
+          path: ./pyproject.toml
+          target: /app/pyproject.toml
+        - action: rebuild
+          path: ./dockerfiles/Dockerfile
+    networks:
+      - test_house_prediction-network
+
+networks:
+  test_house_prediction-network:
+    driver: bridge
+    name: test_house_prediction-network
