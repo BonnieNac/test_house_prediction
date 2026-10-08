@@ -38,6 +38,9 @@ devbox.lock
 *.manifest
 *.spec
 
+# Run logs (make preprocess / train / tune / run_api)
+logs/*.log
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt

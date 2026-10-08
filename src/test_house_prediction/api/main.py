@@ -4,7 +4,7 @@ from fastapi import FastAPI
 
 from test_house_prediction.api.middlewares import LimitUploadSizeMiddleware
 from test_house_prediction.api.routers import base, greetings, predict, system
-from test_house_prediction.core.utils import ensure_dirs_exist, get_project_version
+from test_house_prediction.core.utils import ensure_dirs_exist, get_project_version, setup_file_logging
 
 # Initialize project directories on startup
 ensure_dirs_exist()
@@ -29,6 +29,7 @@ def main() -> None:  # pragma: no cover
     """Run the FastAPI application using uvicorn."""
     import uvicorn
 
+    setup_file_logging("api")
     uvicorn.run("test_house_prediction.api.main:app", host="0.0.0.0", port=8000, reload=True)
 
 
