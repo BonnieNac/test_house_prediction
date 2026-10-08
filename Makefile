@@ -2,6 +2,8 @@
 
 .PHONY: help install dev-install format lint typecheck test test-fast all check run clean up down digest bump release
 
+COMPOSE := docker compose -f deployment/docker-compose.yml
+
 .DEFAULT_GOAL := help
 
 ###################################################################
@@ -25,16 +27,16 @@ run_api: ## Launch the API
 	uv run test_house_prediction-api
 
 up: ## Start the API and Streamlit app concurrently
-	docker-compose up -d
+	$(COMPOSE) up -d
 
 down: ## Stop the API and Streamlit app
-	docker-compose down
+	$(COMPOSE) down
 
 docker-build: ## Build Docker images with OCI labels
 	BUILD_VERSION=$$(cat VERSION) \
 	BUILD_REVISION=$$(git rev-parse HEAD 2>/dev/null || echo "unknown") \
 	BUILD_DATE=$$(date -u +%Y-%m-%dT%H:%M:%SZ) \
-	docker-compose build
+	$(COMPOSE) build
 
 docker-inspect: ## Inspect OCI labels of the built image
 	@docker inspect --format='{{json .Config.Labels}}' test_house_prediction-api | python3 -m json.tool

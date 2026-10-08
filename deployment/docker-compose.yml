@@ -1,8 +1,8 @@
 services:
   api:
     build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile
+      context: ..
+      dockerfile: deployment/docker/Dockerfile
       target: api
       args:
         BUILD_VERSION: ${BUILD_VERSION:-dev}
@@ -10,7 +10,9 @@ services:
         BUILD_DATE: ${BUILD_DATE:-unknown}
     container_name: test_house_prediction-api
     env_file:
-      - .env
+      - ../.env
+    volumes:
+      - ../models:/app/models:ro  # model of make train: the image holds code only
     ports:
       - "8000:8000"
     restart: on-failure
@@ -21,20 +23,20 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./src
+          path: ../src
           target: /app/src
         - action: sync
-          path: ./pyproject.toml
+          path: ../pyproject.toml
           target: /app/pyproject.toml
         - action: rebuild
-          path: ./dockerfiles/Dockerfile
+          path: ./docker/Dockerfile
     networks:
       - test_house_prediction-network
 
   streamlit:
     build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile
+      context: ..
+      dockerfile: deployment/docker/Dockerfile
       target: streamlit
       args:
         BUILD_VERSION: ${BUILD_VERSION:-dev}
@@ -42,7 +44,7 @@ services:
         BUILD_DATE: ${BUILD_DATE:-unknown}
     container_name: test_house_prediction-ui
     env_file:
-      - .env
+      - ../.env
     ports:
       - "8501:8501"
     restart: on-failure
@@ -56,16 +58,16 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./src
+          path: ../src
           target: /app/src
         - action: sync
-          path: ./app
+          path: ../app
           target: /app/app
         - action: sync
-          path: ./pyproject.toml
+          path: ../pyproject.toml
           target: /app/pyproject.toml
         - action: rebuild
-          path: ./dockerfiles/Dockerfile
+          path: ./docker/Dockerfile
     networks:
       - test_house_prediction-network
 

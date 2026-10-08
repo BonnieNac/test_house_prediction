@@ -86,6 +86,7 @@ indent-style = "space"
 docstring-code-format = true
 
 [tool.mypy]
+mypy_path = "src"
 strict = true
 ignore_missing_imports = true
 # Add Pydantic plugin to avoid false positive from the FastAPI model

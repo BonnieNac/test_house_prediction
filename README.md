@@ -115,7 +115,7 @@ Once configured, the `release` job will automatically trigger on every merge to 
 
 ```text
 ├── app/                    # Streamlit application
-├── dockerfiles/            # Multi-stage Dockerfile
+├── deployment/            # Docker image and compose files, server deployment
 ├── docs/                   # Sphinx documentation and reports
 ├── data/                   # Data directories (tip: use DVC for large files)
 ├── src/                    # Main source code
@@ -127,7 +127,6 @@ Once configured, the `release` job will automatically trigger on every merge to 
 │       └── visualization/  # Plotting utilities
 ├── tests/                  # Unit and integration tests
 ├── .env.example            # Environment variables template
-├── docker-compose.yml      # Orchestration for API & App
 ├── Makefile                # Useful development shortcuts
 └── pyproject.toml          # Project metadata and tool config
 ```

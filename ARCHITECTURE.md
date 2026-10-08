@@ -13,22 +13,22 @@ The project follows a modular architecture designed for scalability, maintainabi
 ```mermaid
 graph TD
     User([User / Data Scientist])
-    
+
     subgraph "Project Containers"
         App[Streamlit Dashboard]
         API[FastAPI Backend]
         Files[(Data Storage / Models)]
     end
-    
+
     User -->|Interacts with| App
     User -->|Triggers/Queries| API
     App -->|Consumes| API
     API -->|Reads/Writes| Files
-    
+
     subgraph "External Systems"
         Git[GitLab/GitHub CI]
     end
-    
+
     Git -->|Tests & Builds| API
     Git -->|Tests & Builds| App
 ```
@@ -67,7 +67,7 @@ Built with **FastAPI**, this layer exposes the core logic as RESTful endpoints:
 1. **Ingestion**: Raw data is placed in `data/raw/` or fetched via `src.data`.
 2. **Processing**: Data is transformed and moved to `data/processed/`.
 3. **Training**: `src.models` uses processed data to produce serialized models in `models/`.
-4. **Consumption**: 
+4. **Consumption**:
    - **Offline**: Notebooks or scripts import from `src`.
    - **Online**: API (`src.api`) loads the model and serves predictions; Streamlit (`app/`) displays the results.
 
@@ -80,7 +80,7 @@ Built with **FastAPI**, this layer exposes the core logic as RESTful endpoints:
 
 - **[uv](https://github.com/astral-sh/uv)**: Chosen for its extreme speed and ability to manage Python versions and dependencies in a single, unified tool.
 - **[Ruff](https://github.com/astral-sh/ruff)**: A single tool replacing Flake8, Isort, and Black, providing near-instant linting and formatting.
-- **[Dockerfile (Multi-stage)](dockerfiles/Dockerfile)**: Optimized for small image sizes and security by separating the build environment from the runtime environment.
+- **[Dockerfile (Multi-stage)](deployment/docker/Dockerfile)**: Optimized for small image sizes and security by separating the build environment from the runtime environment.
 - **[Pytest](https://docs.pytest.org/)**: The industry standard for robust, readable, and scalable testing.
 
 ---

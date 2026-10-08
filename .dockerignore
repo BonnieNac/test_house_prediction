@@ -173,3 +173,12 @@ config.yml
 playground.ipynb
 test.json
 .git
+
+# Never in the image: data, trained models and local stores (the model comes from MLflow or a mounted folder)
+data/
+models/
+notebooks/
+mlruns/
+mlartifacts/
+mlflow.db
+deployment/config/*.env

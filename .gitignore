@@ -97,3 +97,8 @@ dmypy.json
 # VS code configuration
 # .vscode
 .history
+# pytest JUnit report
+report.xml
+
+# Claude Code (personal settings)
+.claude/settings.local.json
