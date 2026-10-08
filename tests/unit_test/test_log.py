@@ -31,3 +31,11 @@ def test_setup_file_logging_defaults_to_logs_dir(tmp_path: Path, monkeypatch: py
         logger.remove(handler_id)
 
     assert len(list((tmp_path / "default_logs").glob("api_*.log"))) == 1
+
+
+def test_setup_file_logging_creates_no_empty_file(tmp_path: Path) -> None:
+    """A run that logs nothing (e.g. --list) leaves no empty log file."""
+    handler_id = log.setup_file_logging("idle", directory=tmp_path / "logs")
+    logger.remove(handler_id)
+
+    assert list((tmp_path / "logs").glob("idle_*.log")) == []

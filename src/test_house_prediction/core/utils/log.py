@@ -11,7 +11,8 @@ def setup_file_logging(name: str, directory: Path | None = None, level: str = "I
     """Also write the logs to ``logs/<name>_<date>.log`` (the terminal output is kept).
 
     One file per day and per entry point: a new run of the same day is appended to it. Files
-    over 10 MB start a new one, files older than 30 days are deleted.
+    over 10 MB start a new one, files older than 30 days are deleted. The file is only created
+    at the first message, so a run that logs nothing (``--list``, ``--help``) leaves no empty file.
 
     Args:
         name: Entry point name, used as the file prefix (e.g. ``train``).
@@ -25,4 +26,4 @@ def setup_file_logging(name: str, directory: Path | None = None, level: str = "I
     directory = directory or paths.LOGS_DIR
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{name}_{{time:YYYY-MM-DD}}.log"
-    return logger.add(path, level=level, rotation="10 MB", retention="30 days", encoding="utf-8")
+    return logger.add(path, level=level, rotation="10 MB", retention="30 days", encoding="utf-8", delay=True)
