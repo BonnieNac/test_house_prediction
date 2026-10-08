@@ -1,6 +1,6 @@
 # Makefile for the test_house_prediction project
 
-.PHONY: help install dev-install format lint typecheck test test-fast all check run clean up down digest bump release
+.PHONY: help install dev-install format lint typecheck test test-fast all check run clean up down digest bump release mlflow-ui mlflow-up
 
 COMPOSE := docker compose -f deployment/docker-compose.yml
 
@@ -40,6 +40,16 @@ docker-build: ## Build Docker images with OCI labels
 
 docker-inspect: ## Inspect OCI labels of the built image
 	@docker inspect --format='{{json .Config.Labels}}' test_house_prediction-api | python3 -m json.tool
+
+###################################################################
+# MLOPS
+###################################################################
+
+mlflow-ui: ## Open the MLflow UI on the local store (http://localhost:5000)
+	uv run mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+
+mlflow-up: ## Start the MLflow tracking server with docker compose
+	$(COMPOSE) up -d mlflow
 
 ###################################################################
 # CODE QUALITY

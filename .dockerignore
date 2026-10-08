@@ -182,3 +182,8 @@ mlruns/
 mlartifacts/
 mlflow.db
 deployment/config/*.env
+
+# MLflow (local tracking store and artifacts)
+mlruns/
+mlartifacts/
+mlflow.db

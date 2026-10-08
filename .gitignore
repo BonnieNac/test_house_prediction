@@ -102,3 +102,8 @@ report.xml
 
 # Claude Code (personal settings)
 .claude/settings.local.json
+
+# MLflow (local tracking store and artifacts)
+mlruns/
+mlartifacts/
+mlflow.db

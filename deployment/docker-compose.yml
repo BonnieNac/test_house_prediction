@@ -71,7 +71,26 @@ services:
     networks:
       - test_house_prediction-network
 
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.17.0
+    container_name: test_house_prediction-mlflow
+    command: >
+      mlflow server --host 0.0.0.0 --port 5000
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts
+      --allowed-hosts "localhost:*,127.0.0.1:*,mlflow:*"
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow-data:/mlflow
+    restart: on-failure
+    networks:
+      - test_house_prediction-network
+
 networks:
   test_house_prediction-network:
     driver: bridge
     name: test_house_prediction-network
+
+volumes:
+  mlflow-data:

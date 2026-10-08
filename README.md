@@ -149,3 +149,10 @@ By default, the `data/` directory contains subfolders for different stages of yo
 
 ## 📄 License
 This project is licensed under the **MIT** license. See the [LICENSE](LICENSE) file for details.
+
+## MLOps
+
+- **Tracking** : chaque `make train` enregistre dans MLflow les modèles comparés (runs enfants), le meilleur modèle, ses paramètres et ses métriques ; `make mlflow-ui` ouvre l'interface sur http://localhost:5000.
+- **Serveur partagé** : `make mlflow-up` lance le service `mlflow` de `deployment/docker-compose.yml`, puis `MLFLOW_TRACKING_URI=http://localhost:5000` dans `.env` (depuis un autre conteneur : `http://mlflow:5000`).
+- **Model Registry** : `uv run test_house_prediction-train --register <nom>` enregistre une version du meilleur modèle.
+- **Données** : DVC est initialisé ; `uv run dvc add data/raw/<fichier>` versionne un jeu de données, `uv run dvc remote add -d <nom> <url>` configure le stockage distant.
