@@ -21,6 +21,7 @@ dependencies = [
     "dvc>=3.67.1",
     "fastapi>=0.142.4",
     "ipykernel>=7.4.0",
+    "joblib>=1.6.0",
     "loguru>=0.7.3",
     "matplotlib>=3.11.2",
     "mlflow>=3.17.0",
@@ -52,6 +53,8 @@ dev = [
 [project.scripts]
 test_house_prediction-app = "app.streamlit_app:main"
 test_house_prediction-api = "test_house_prediction.api.main:main"
+test_house_prediction-train = "test_house_prediction.core.models.train:main"
+test_house_prediction-tune = "test_house_prediction.core.models.tune:main"
 
 [build-system]
 requires = ["setuptools>=68.0.0"]

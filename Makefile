@@ -1,6 +1,6 @@
 # Makefile for the test_house_prediction project
 
-.PHONY: help install dev-install format lint typecheck test test-fast all check run clean up down digest bump release mlflow-ui mlflow-up
+.PHONY: help install dev-install format lint typecheck test test-fast all check run clean up down digest bump release mlflow-ui mlflow-up profile preprocess train train-list tune
 
 COMPOSE := docker compose -f deployment/docker-compose.yml
 
@@ -50,6 +50,25 @@ mlflow-ui: ## Open the MLflow UI on the local store (http://localhost:5000)
 
 mlflow-up: ## Start the MLflow tracking server with docker compose
 	$(COMPOSE) up -d mlflow
+
+###################################################################
+# ML PIPELINE
+###################################################################
+
+profile: ## Statistical profile of a dataset, no rows printed: make profile FILE=data/raw/<file> [TARGET=<column>]
+	uv run python scripts/profile_dataset.py $(FILE) $(if $(TARGET),--target "$(TARGET)")
+
+preprocess: ## Clean data/raw and build the features into data/processed
+	uv run python scripts/run_preprocessing.py
+
+train: ## Compare the models by cross-validation and save the best one in models/
+	uv run python scripts/run_training.py
+
+train-list: ## List the available models
+	uv run python scripts/run_training.py --list
+
+tune: ## Tune the hyperparameters of the best models and save the best one in models/
+	uv run python scripts/run_tuning.py
 
 ###################################################################
 # CODE QUALITY

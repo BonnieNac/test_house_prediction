@@ -156,3 +156,11 @@ This project is licensed under the **MIT** license. See the [LICENSE](LICENSE) f
 - **Serveur partagé** : `make mlflow-up` lance le service `mlflow` de `deployment/docker-compose.yml`, puis `MLFLOW_TRACKING_URI=http://localhost:5000` dans `.env` (depuis un autre conteneur : `http://mlflow:5000`).
 - **Model Registry** : `uv run test_house_prediction-train --register <nom>` enregistre une version du meilleur modèle.
 - **Données** : DVC est initialisé ; `uv run dvc add data/raw/<fichier>` versionne un jeu de données, `uv run dvc remote add -d <nom> <url>` configure le stockage distant.
+
+## Pipeline ML (régression)
+
+1. Déposer le jeu de données dans `data/raw/` et renseigner `src/test_house_prediction/core/config.py` (fichier, `TARGET`, colonnes, métrique…) : `/adapt-config <fichier>` le fait à partir du profil statistique (`make profile FILE=data/raw/<fichier> TARGET=<colonne>`), sans lire les données elles-mêmes.
+2. `make preprocess` : `data_io/load.py` → `data_io/clean.py` → `features/build_features.py` → `data/processed/`.
+3. `make train` : compare les modèles de `models/train.py` par validation croisée (`models/evaluate.py`), réentraîne le meilleur, l'évalue sur le jeu de test et sauvegarde le pipeline (preprocessing + modèle) dans `models/model.joblib`. `make train-list` liste les modèles ; `uv run test_house_prediction-train --models <nom> <nom>` en compare une sélection.
+4. `make tune` : recherche d'hyperparamètres (`RandomizedSearchCV`, même validation croisée et même métrique) sur les `TUNE_TOP_K` meilleurs modèles, `N_ITER` combinaisons chacun (`core/config.py`) ; espaces de recherche dans `PARAM_SPACES` (`models/train.py`). Le meilleur réglage est évalué une fois sur le jeu de test et remplace `models/model.joblib`. `uv run test_house_prediction-tune --models <nom>` règle un modèle précis.
+5. `make run_api` puis `POST /predict` avec `{"records": [{...}]}` : prédictions du modèle sauvegardé (schémas dans `api/schemas.py`).
